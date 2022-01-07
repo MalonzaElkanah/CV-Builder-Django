@@ -1,0 +1,81 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block title %} Update Profile Section 1 {% endblock %}
+{% block content %}
+	<div class="row text-center">
+		<h3>User Profile</h3>
+	</div>
+	<div class="row">
+		<div class="col-12">
+			{% if state == 'EDIT' %}
+			<!-- For Edit Site Form -->
+			<form action="#" method="post">
+			{% else %}
+			<!-- For Add Site Form --->
+			<form action="#" method="post">
+			{% endif %}
+				<div class="row">
+					{% csrf_token %}
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Job Title</label>
+  						<input type="text" class="form-control" name="title" value="{{profile.title}}" placeholder="Eg. Web Developer, Junior Accountant" required>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">First Name</label>
+  						<input type="text" class="form-control" name="first_name" value="{{profile.first_name}}" required>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Middle Name</label>
+  						<input type="text" class="form-control" name="middle_name" value="{{profile.middle_name}}">
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Last Name</label>
+  						<input type="text" class="form-control" name="last_name" value="{{profile.last_name}}">
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Email</label>
+  						<input type="email" class="form-control" name="email" value="{{profile.email}}">
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Phone Number</label>
+  						<input type="text" class="form-control" name="phone_number" value="{{profile.phone_number}}">
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Location</label>
+  						<input type="text" class="form-control" name="location" value="{{profile.location}}">
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Summary</label>
+  						<textarea class="form-control" name="summary" rows="5">{{profile.summary}}</textarea>
+					</div>
+				</div>
+				<div class="row pt-4">
+					<h5>Social Links</h5>
+				</div>
+				<div class="row">
+					<div class="col-md-5 mb-3">
+						<label class="form-label">Link Name</label>
+  						<input type="text" class="form-control" name="name">
+					</div>
+					<div class="col-md-5 mb-3">
+						<label class="form-label">Link Url</label>
+  						<input type="text" class="form-control" name="link">
+					</div>
+					<div class="col-md-2">
+						<a class="btn btn-danger" href="javascript:void(0);">DELETE</a>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-2">
+						<a class="btn btn-outline-primary" href="#">Add More</a>
+					</div>
+				</div>
+				<div class="row pt-4">
+					<div class="col-12">
+						<button class="btn btn-primary">SUBMIT</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}

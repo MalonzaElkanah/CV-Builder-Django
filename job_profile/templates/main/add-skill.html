@@ -1,0 +1,53 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block title %} Update Skill Section {% endblock %}
+{% block content %}
+	<div class="row text-center">
+		<h3>Skill</h3>
+	</div>
+	<div class="row">
+		<div class="col-12">
+			{% if state == 'EDIT' %}
+			<!-- For Edit Site Form -->
+			<form action="#" method="post">
+			{% else %}
+			<!-- For Add Site Form --->
+			<form action="#" method="post">
+			{% endif %}
+				<div class="row">
+					{% csrf_token %}
+					<div class="col-md-10 mb-3">
+						<label class="form-label">Name</label>
+  						<input type="text" class="form-control" name="name" value="{{skill.name}}" placeholder="Eg. Frontend Programming" required>
+					</div>
+				</div>
+				<div class="row pt-4">
+					<h5>Skill Keyword</h5>
+				</div>
+				<div class="row">
+					<div class="col-md-5 mb-3">
+						<label class="form-label">Keyword</label>
+  						<input type="text" class="form-control" name="name" placeholder="Eg. HTML">
+					</div>
+					<div class="col-md-2">
+						<a class="btn btn-danger" href="javascript:void(0);">DELETE</a>
+					</div>
+					<div class="col-md-2">
+						<a class="btn btn-outline-primary" href="#">Add more Keywords</a>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-10 text-center">
+						<a class="btn btn-outline-primary" href="#">Add More Skill</a>
+					</div>
+				</div>
+				<div class="row pt-4">
+					<div class="col-12">
+						<button class="btn btn-primary">SUBMIT</button>
+						<a href="btn btn-outline-secondary">Skip >></a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}

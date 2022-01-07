@@ -1,0 +1,81 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block title %} CV Generator {% endblock %}
+{% block content %}
+	<div class="row text-center">
+		<h3>Job Profile</h3>
+	</div>
+	<div class="row">
+		<div class="col-12">
+			<table class="table table-striped">
+				<thead>
+				    <tr>
+				      	<th scope="col">Title</th>
+				      	<th scope="col">Name</th>
+				      	<th scope="col">Email</th>
+				      	<th scope="col">Phone</th>
+				      	<th scope="col">Location</th>
+				      	<th scope="col">Action</th>
+				    </tr>
+				</thead>
+				<tbody>
+				{% for profile in profiles %}
+				    <tr>
+				      	<td>{{profile.title}}</td>
+				      	<td>{{profile.first_name}} {{profile.middle_name}} {{profile.last_name}}</td>
+				      	<td>{{profile.email}}</td>
+				      	<td>{{profile.phone_number}}</td>
+				      	<td>{{profile.location}}</td>
+				      	<td><a href="#" class="btn btn-primary">View</a></td>
+				      	<td><a href="#" class="btn btn-secondary">Edit</a></td>
+				    </tr>
+				{% empty %}
+					<tr>
+						<td colspan="6" class="text-center">No Profile...<a href="{% url 'add-profile' 1 %}">Click Here to add.</a></td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<div class="col-12">
+			<a href="{% url 'add-profile' 1 %}" class="btn btn-primary">Add Job Site</a>
+		</div>
+	</div>
+	<div class="row text-center">
+		<h3>My CVs</h3>
+	</div>
+	<div class="row">
+		<div class="col-12">
+			<table class="table table-striped">
+				<thead>
+				    <tr>
+				      	<th scope="col">#</th>
+				      	<th scope="col">Name</th>
+				      	<th scope="col">File</th>
+				      	<th scope="col">Date Added</th>
+				      	<th scope="col">Action</th>
+				    </tr>
+				</thead>
+				<tbody>
+				{% for cv in all_cv %}
+				    <tr>
+				      	<td>{{forloop.counter}}</td>
+				      	<td>{{cv.name}}</td>
+				      	<td><a href="{{cv.file.url}}">{{cv.file}}</a></td>
+				      	<td>{{cv.date_created}}</td>
+				      	<td><a href="#" class="btn btn-primary">View</a></td>
+				      	<td><a href="#" class="btn btn-secondary">Edit</a></td>
+				    </tr>
+				{% empty %}
+					<tr>
+						<td colspan="6" class="text-center">No CV...<a href="#">Click Here to add.</a></td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<div class="col-12">
+			<a href="#" class="btn btn-primary">Add CV</a>
+		</div>
+	</div>
+{% endblock %}

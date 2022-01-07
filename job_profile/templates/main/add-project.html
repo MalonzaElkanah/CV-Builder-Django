@@ -1,0 +1,64 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block title %} Update Project Section {% endblock %}
+{% block content %}
+	<div class="row text-center">
+		<h3>Work</h3>
+	</div>
+	<div class="row">
+		<div class="col-12">
+			{% if state == 'EDIT' %}
+			<!-- For Edit Site Form -->
+			<form action="#" method="post">
+			{% else %}
+			<!-- For Add Site Form --->
+			<form action="#" method="post">
+			{% endif %}
+				<div class="row">
+					{% csrf_token %}
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Project Name</label>
+  						<input type="text" class="form-control" name="name" value="{{project.name}}" required>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Link</label>
+  						<input type="text" class="form-control" name="url" value="{{project.url}}" required>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Date</label>
+  						<input type="text" class="form-control" name="date" value="{{project.date}}" placeholder="Formart: YYYY-MM-DD" required>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Description</label>
+  						<textarea class="form-control" name="description" rows="5">{{project.description}}</textarea>
+					</div>
+				</div>
+				<div class="row pt-4">
+					<h5>Project Technology/Keywords</h5>
+				</div>
+				<div class="row">
+					<div class="col-md-10 mb-3">
+						<label class="form-label">Keyword</label>
+  						<input type="text" class="form-control" name="technology">
+					</div>
+					<div class="col-md-2">
+						<a class="btn btn-danger" href="javascript:void(0);">DELETE</a>
+					</div>
+					<div class="col-md-2">
+						<a class="btn btn-outline-primary" href="#">Add Keywords</a>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-10 text-center">
+						<a class="btn btn-outline-primary" href="#">Add More Project</a>
+					</div>
+				</div>
+				<div class="row pt-4">
+					<div class="col-12">
+						<button class="btn btn-primary">SUBMIT</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}

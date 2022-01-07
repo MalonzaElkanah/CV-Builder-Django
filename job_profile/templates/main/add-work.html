@@ -1,0 +1,72 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block title %} Update Work Section {% endblock %}
+{% block content %}
+	<div class="row text-center">
+		<h3>Work</h3>
+	</div>
+	<div class="row">
+		<div class="col-12">
+			{% if state == 'EDIT' %}
+			<!-- For Edit Site Form -->
+			<form action="#" method="post">
+			{% else %}
+			<!-- For Add Site Form --->
+			<form action="#" method="post">
+			{% endif %}
+				<div class="row">
+					{% csrf_token %}
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Company</label>
+  						<input type="text" class="form-control" name="company" value="{{work.company}}" required>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Location</label>
+  						<input type="text" class="form-control" name="location" value="{{work.location}}" required>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Position</label>
+  						<input type="text" class="form-control" name="position" value="{{work.position}}" required>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Website</label>
+  						<input type="text" class="form-control" name="website" value="{{work.website}}">
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Start Date</label>
+  						<input type="text" class="form-control" name="start_date" value="{{edu.start_date}}" placeholder="Formart: YYYY-MM-DD" required>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">End Date</label>
+  						<input type="text" class="form-control" name="end_date" value="{{edu.end_date}}" placeholder="Formart: YYYY-MM-DD" required>
+					</div>
+				</div>
+				<div class="row pt-4">
+					<h5>Work Highlights</h5>
+				</div>
+				<div class="row">
+					<div class="col-md-10 mb-3">
+						<label class="form-label">Highlight</label>
+  						<input type="text" class="form-control" name="name">
+					</div>
+					<div class="col-md-2">
+						<a class="btn btn-danger" href="javascript:void(0);">DELETE</a>
+					</div>
+					<div class="col-md-2">
+						<a class="btn btn-outline-primary" href="#">Add Highlights</a>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-10 text-center">
+						<a class="btn btn-outline-primary" href="#">Add More Work</a>
+					</div>
+				</div>
+				<div class="row pt-4">
+					<div class="col-12">
+						<button class="btn btn-primary">SUBMIT</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}

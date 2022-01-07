@@ -1,0 +1,49 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block title %} Update Award Section {% endblock %}
+{% block content %}
+	<div class="row text-center">
+		<h3>Award Details</h3>
+	</div>
+	<div class="row">
+		<div class="col-12">
+			{% if state == 'EDIT' %}
+			<!-- For Edit Site Form -->
+			<form action="#" method="post">
+			{% else %}
+			<!-- For Add Site Form --->
+			<form action="#" method="post">
+			{% endif %}
+				<div class="row">
+					{% csrf_token %}
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Title</label>
+  						<input type="text" class="form-control" name="title" value="{{award.title}}" required>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Awarder</label>
+  						<input type="text" class="form-control" name="awarder" value="{{award.awarder}}" required>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Date</label>
+  						<input type="text" class="form-control" name="date" value="{{award.date}}" placeholder="Formart: YYYY-MM-DD" required>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Summary</label>
+  						<textarea class="form-control" name="summary" rows="5">{{award.summary}}</textarea>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-2">
+						<a class="btn btn-outline-primary" href="#">Add More</a>
+					</div>
+				</div>
+				<div class="row pt-4">
+					<div class="col-12">
+						<button class="btn btn-primary">SUBMIT</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}
