@@ -12,7 +12,7 @@
 			<form action="#" method="post">
 			{% else %}
 			<!-- For Add Site Form --->
-			<form action="#" method="post">
+			<form action="{% url 'add-new-profile' %}" method="post">
 			{% endif %}
 				<div class="row">
 					{% csrf_token %}
@@ -52,23 +52,47 @@
 				<div class="row pt-4">
 					<h5>Social Links</h5>
 				</div>
+				{% for link in profile.links %}
 				<div class="row">
 					<div class="col-md-5 mb-3">
 						<label class="form-label">Link Name</label>
-  						<input type="text" class="form-control" name="name">
+  						<input type="text" class="form-control" name="name-link-{{link.id}}" value="{{link.name}}" required>
 					</div>
 					<div class="col-md-5 mb-3">
 						<label class="form-label">Link Url</label>
-  						<input type="text" class="form-control" name="link">
+  						<input type="text" class="form-control" name="link-link-{{link.id}}" value="{{link.link}}" required>
 					</div>
 					<div class="col-md-2">
 						<a class="btn btn-danger" href="javascript:void(0);">DELETE</a>
 					</div>
 				</div>
+				{% if forloop.first %}
+				<input type="hidden" name="form_num" value="0">
+				{% endif %}
+				{% empty %}
+				<div class="row form-row">
+					<div class="row form-item">
+						<div class="col-md-5 mb-3">
+							<label class="form-label">Link Name</label>
+	  						<input type="text" class="form-control" name="name-link_1">
+						</div>
+						<div class="col-md-5 mb-3">
+							<label class="form-label">Link Url</label>
+	  						<input type="text" class="form-control" name="link-link_1">
+						</div>
+						<div class="col-md-2">
+							<a class="btn btn-danger trash" href="javascript:void(0);">DELETE</a>
+						</div>
+					</div>
+				</div>
+				<input type="hidden" name="form_num" value="1">
+				{% endfor %}
+				
 				<div class="row">
 					<div class="col-md-2">
-						<a class="btn btn-outline-primary" href="#">Add More</a>
+						<a id="link-add-id" class="btn btn-outline-primary" href="#">Add More</a>
 					</div>
+					
 				</div>
 				<div class="row pt-4">
 					<div class="col-12">
@@ -78,4 +102,10 @@
 			</form>
 		</div>
 	</div>
+{% endblock %}
+
+{% block js %}
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <!-- JS Page Custom -->
+    <script src="{% static 'main/profile.js' %}"></script>
 {% endblock %}

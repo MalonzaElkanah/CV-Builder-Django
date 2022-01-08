@@ -26,19 +26,19 @@
 				      	<td>{{profile.email}}</td>
 				      	<td>{{profile.phone_number}}</td>
 				      	<td>{{profile.location}}</td>
-				      	<td><a href="#" class="btn btn-primary">View</a></td>
-				      	<td><a href="#" class="btn btn-secondary">Edit</a></td>
+				      	<td><a href="{% url 'profile' profile.id %}" class="btn btn-primary">View</a></td>
+				      	<td><a href="{% url 'edit-profile' profile.id %}" class="btn btn-secondary">Edit</a></td>
 				    </tr>
 				{% empty %}
 					<tr>
-						<td colspan="6" class="text-center">No Profile...<a href="{% url 'add-profile' 1 %}">Click Here to add.</a></td>
+						<td colspan="6" class="text-center">No Profile...<a href="{% url 'add-new-profile' %}">Click Here to add.</a></td>
 					</tr>
 				{% endfor %}
 				</tbody>
 			</table>
 		</div>
 		<div class="col-12">
-			<a href="{% url 'add-profile' 1 %}" class="btn btn-primary">Add Job Site</a>
+			<a href="{% url 'add-new-profile' %}" class="btn btn-primary">Add Job Site</a>
 		</div>
 	</div>
 	<div class="row text-center">
