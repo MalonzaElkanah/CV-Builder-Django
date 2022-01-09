@@ -3,62 +3,85 @@
 {% block title %} Update Project Section {% endblock %}
 {% block content %}
 	<div class="row text-center">
-		<h3>Work</h3>
+		<h3>Projects</h3>
 	</div>
 	<div class="row">
 		<div class="col-12">
-			{% if state == 'EDIT' %}
-			<!-- For Edit Site Form -->
-			<form action="#" method="post">
-			{% else %}
-			<!-- For Add Site Form --->
-			<form action="#" method="post">
-			{% endif %}
+			<form action="{% url 'add-profile' 4 profile.id %}" method="post">
+				{% csrf_token %}
+				{% for project in profile.projects %}
 				<div class="row">
-					{% csrf_token %}
 					<div class="col-md-6 mb-3">
 						<label class="form-label">Project Name</label>
-  						<input type="text" class="form-control" name="name" value="{{project.name}}" required>
+  						<input type="text" class="form-control" name="name-project-{{project.id}}" value="{{project.name}}" required>
 					</div>
 					<div class="col-md-6 mb-3">
 						<label class="form-label">Link</label>
-  						<input type="text" class="form-control" name="url" value="{{project.url}}" required>
+  						<input type="text" class="form-control" name="url-project-{{project.id}}" value="{{project.url}}" required>
 					</div>
 					<div class="col-md-6 mb-3">
 						<label class="form-label">Date</label>
-  						<input type="text" class="form-control" name="date" value="{{project.date}}" placeholder="Formart: YYYY-MM-DD" required>
+  						<input type="text" class="form-control" name="date-project-{{project.id}}" value="{{project.date|date:"Y-m-d"}}" placeholder="Formart: YYYY-MM-DD" required>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Project Technologies</label>
+  						<input type="text" class="form-control" name="technologies-project-{{project.id}}" value="{% for keyword in project.keywords %}{{keyword.technology}}, {% endfor %}" placeholder="Eg: Python, Flutter, XML, CSS">
 					</div>
 					<div class="col-md-6 mb-3">
 						<label class="form-label">Description</label>
-  						<textarea class="form-control" name="description" rows="5">{{project.description}}</textarea>
+  						<textarea class="form-control" name="description-project-{{project.id}}" rows="5">{{project.description}}</textarea>
 					</div>
 				</div>
-				<div class="row pt-4">
-					<h5>Project Technology/Keywords</h5>
+				{% if forloop.last %}
+				<div class="row form-row"></div>
+				<input type="hidden" name="form_num" value="0">
+				{% endif %}
+				{% empty %}
+				<div class="row form-row">
+					<div class="row form-item">
+						<div class="col-md-6 mb-3">
+							<label class="form-label">Project Name</label>
+	  						<input type="text" class="form-control" name="name-project_1" required>
+						</div>
+						<div class="col-md-6 mb-3">
+							<label class="form-label">Link</label>
+	  						<input type="text" class="form-control" name="url-project_1" required>
+						</div>
+						<div class="col-md-6 mb-3">
+							<label class="form-label">Date</label>
+	  						<input type="text" class="form-control" name="date-project_1" placeholder="Formart: YYYY-MM-DD" required>
+						</div>
+						<div class="col-md-6 mb-3">
+							<label class="form-label">Project Technologies</label>
+	  						<input type="text" class="form-control" name="technologies-project_1" placeholder="Eg: Python, Flutter, XML, CSS">
+						</div>
+						<div class="col-md-6 mb-3">
+							<label class="form-label">Description</label>
+	  						<textarea class="form-control" name="description-project_1" rows="5"></textarea>
+						</div>
+					</div>
 				</div>
-				<div class="row">
-					<div class="col-md-10 mb-3">
-						<label class="form-label">Keyword</label>
-  						<input type="text" class="form-control" name="technology">
-					</div>
-					<div class="col-md-2">
-						<a class="btn btn-danger" href="javascript:void(0);">DELETE</a>
-					</div>
-					<div class="col-md-2">
-						<a class="btn btn-outline-primary" href="#">Add Keywords</a>
-					</div>
-				</div>
+				<input type="hidden" name="form_num" value="1">
+				{% endfor %}
 				<div class="row">
 					<div class="col-md-10 text-center">
-						<a class="btn btn-outline-primary" href="#">Add More Project</a>
+						<a id="project-add-id" class="btn btn-outline-primary" href="#">Add More Project</a>
 					</div>
 				</div>
 				<div class="row pt-4">
 					<div class="col-12">
 						<button class="btn btn-primary">SUBMIT</button>
+						<a class="btn btn-secondary" href="{% url 'add-profile' 3 profile.id %}">Back</a>
+						<a class="btn btn-secondary" href="{% url 'add-profile' 5 profile.id %}">Skip >></a>
 					</div>
 				</div>
 			</form>
 		</div>
 	</div>
+{% endblock %}
+
+{% block js %}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- JS Page Custom -->
+    <script src="{% static 'main/profile.js' %}"></script>
 {% endblock %}

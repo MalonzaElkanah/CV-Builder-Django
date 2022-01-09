@@ -3,6 +3,7 @@ from django.http import HttpResponse
 
 # Create your views here.
 from job_profile.models import JobProfile, Link, Education, Work, CV, Award, Project, Skill
+from job_profile.models import WorkHighlight, SkillKeyword, ProjectKeyword
 from job_profile.forms import JobProfileForm, LinkForm, EducationForm, WorkForm
 
 
@@ -59,7 +60,7 @@ def add_profile(request, step, profile_id):
 				edu.save()
 
 			# Add New Education Data
-			form_num = int(request.POST["edu_form_num"])
+			form_num = int(request.POST["form_num"])
 			if form_num > 0:
 				form_num = form_num + 1
 				for x in range(1, form_num):
@@ -110,7 +111,7 @@ def add_profile(request, step, profile_id):
 							keyword.save()
 
 			# Add New Work Data
-			form_num = int(request.POST["work_form_num"])
+			form_num = int(request.POST["form_num"])
 			if form_num > 0:
 				form_num = form_num + 1
 				for x in range(1, form_num):
@@ -124,8 +125,8 @@ def add_profile(request, step, profile_id):
 						form = WorkForm({'job_profile': profile.id, 'company': company, 
 							'location': location, 'position': position, 'website': website, 
 							'start_date': start_date, 'end_date': end_date})
-						if data.is_valid():
-							work = data.save()
+						if form.is_valid():
+							work = form.save()
 						else:
 							print(data.errors)
 
@@ -137,32 +138,31 @@ def add_profile(request, step, profile_id):
 				skill.name = request.POST["name-skill-"+str(skill.id)]
 				skill.save()
 				# Update Skill KeyWords
-				for keyword in skill.keywords():
-					post_name = "name-sub-skill-"+str(skill.id)+"-"+str(keyword.id)
-					name = request.POST.get(post_name, keyword.name)
-					keyword.name = name
-					keyword.save()
-
-				# Add new Skill Keywords
-				form_num = int(request.POST.get("sub-skill_form_num"+str(skill.id), 0))
-				if form_num > 0:
-					form_num = form_num + 1
-					for x in range(1, form_num):
-						post_name = "name-sub-skill-"+str(skill.id)+"_"+str(x)
-						name = request.POST.get(post_name, 0)
-						if name != 0:
-							keyword = SkillKeyword(skill=skill, name=name)
-							keyword.save()
+				keywords = request.POST["keywords-skill-"+str(skill.id)]
+				keywords_dic = keywords.split(',')
+				# Get old keywords and Delete them
+				skill_keywords = SkillKeyword.objects.filter(skill=skill.id)
+				skill_keywords.delete()
+				# Add new keywords
+				for keyword in keywords_dic:
+					new_keyword = SkillKeyword(skill=skill, name=keyword)
+					new_keyword.save()
 
 			# Add New Skills
-			form_num = int(request.POST["skill_form_num"])
+			form_num = int(request.POST["form_num"])
 			if form_num > 0:
 				form_num = form_num + 1
 				for x in range(1, form_num):
 					name = request.POST["name-skill_"+str(x)]
 					if name.strip() != "":
-						data = Skill(job_profile=job_profile, name=name)
-						data.save()
+						skill = Skill(job_profile=profile, name=name)
+						skill.save()
+						# New Skill KeyWords
+						keywords = request.POST["keywords-skill_"+str(skill.id)]
+						keywords_dic = keywords.split(',')
+						for keyword in keywords_dic:
+							new_keyword = SkillKeyword(skill=skill, name=keyword)
+							new_keyword.save()
 
 			# Return Project Form View
 			return redirect('add-profile', 4, profile.id)
@@ -175,40 +175,42 @@ def add_profile(request, step, profile_id):
 				project.date = request.POST["date-project-"+str(project.id)]
 				project.save()
 				# Update Project Keywords
-				for keyword in project.keywords():
-					post_name = "name-technology-"+str(project.id)+"-"+str(keyword.id)
-					name = request.POST.get(post_name, keyword.technology)
-					keyword.technology = name
-					keyword.save()
-
-				# Add new Project Keywords
-				form_num = int(request.POST.get("technology_form_num"+str(project.id), 0))
-				if form_num > 0:
-					form_num = form_num + 1
-					for x in range(1, form_num):
-						post_name = "name-technology-"+str(project.id)+"_"+str(x)
-						name = request.POST.get(post_name, 0)
-						if name != 0:
-							keyword = ProjectKeyword(project=project, technology=name)
-							keyword.save()
+				keywords = request.POST['technologies-project-'+str(project.id)]
+				keywords_dic = keywords.split(',')
+				# Get old keywords and Delete them
+				project_keywords = ProjectKeyword.objects.filter(project=project.id)
+				project_keywords.delete()
+				# Add new keywords
+				for keyword in keywords_dic:
+					new_keyword = ProjectKeyword(project=project, technology=keyword.strip())
+					new_keyword.save()
 
 			# Add New Projects
-			form_num = int(request.POST["project_form_num"])
+			form_num = int(request.POST["form_num"])
 			if form_num > 0:
 				form_num = form_num + 1
 				for x in range(1, form_num):
 					name = request.POST["name-project_"+str(x)]
 					description = request.POST["description-project_"+str(x)]
 					url = request.POST["url-project_"+str(x)]
+					date = request.POST["date-project_"+str(x)]
 					if name.strip() != "":
-						data = Project(job_profile=job_profile, name=name, description=description, url=url)
-						data.save()
+						project = Project(job_profile=profile, name=name, description=description, url=url, 
+							date=date)
+						project.save()
+						# Add Project Keywords
+						keywords = request.POST['technologies-project_'+str(x)]
+						keywords_dic = keywords.split(',')
+						# Add new keywords
+						for keyword in keywords_dic:
+							new_keyword = ProjectKeyword(project=project, technology=keyword.strip())
+							new_keyword.save()
 
 			# Return Award Form View
 			return redirect('add-profile', 5, profile.id)
 		elif int(step) == 5:
 			# Update Awards 
-			for award in job_profile.awards():
+			for award in profile.awards():
 				award.title = request.POST["title-award-"+str(award.id)]
 				award.date = request.POST["date-award-"+str(award.id)] 
 				award.awarder = request.POST["awarder-award-"+str(award.id)] 
@@ -216,7 +218,7 @@ def add_profile(request, step, profile_id):
 				award.save()
 
 			# Add New AWards
-			form_num = int(request.POST["award_form_num"])
+			form_num = int(request.POST["form_num"])
 			if form_num > 0:
 				form_num = form_num + 1
 				for x in range(1, form_num):
@@ -225,7 +227,7 @@ def add_profile(request, step, profile_id):
 					awarder = request.POST["awarder-award_"+str(x)]
 					summary = request.POST["summary-award_"+str(x)]
 					if title.strip() != "":
-						data = Award(job_profile=job_profile, title=title, date=date, awarder=awarder, 
+						data = Award(job_profile=profile, title=title, date=date, awarder=awarder, 
 							summary=summary)
 						data.save()
 
@@ -235,15 +237,15 @@ def add_profile(request, step, profile_id):
 			return redirect('profile', profile.id)
 	else:
 		if int(step) == 1:
-			return render(request, 'main/add-education.html')
+			return render(request, 'main/add-education.html', {'profile': profile})
 		elif int(step) == 2:
-			return render(request, 'main/add-work.html')
+			return render(request, 'main/add-work.html', {'profile': profile})
 		elif int(step) == 3:
-			return render(request, 'main/add-skill.html')
+			return render(request, 'main/add-skill.html', {'profile': profile})
 		elif int(step) == 4:
-			return render(request, 'main/add-project.html')
+			return render(request, 'main/add-project.html', {'profile': profile})
 		elif int(step) == 5:
-			return render(request, 'main/add-award.html')
+			return render(request, 'main/add-award.html', {'profile': profile})
 		else:
 			return redirect('index')
 
@@ -281,8 +283,9 @@ def edit_profile(request, profile_id):
 						data.save()
 					else:
 						print(data.errors)
-			 
+		# return  
+		return redirect('add-profile', 1, profile.id)
 	else:
-		return render(request, 'main/add-profile.html', {'profile': profile})
+		return render(request, 'main/add-profile.html', {'profile': profile, 'state': 'EDIT'})
 
 

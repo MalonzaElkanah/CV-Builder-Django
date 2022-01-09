@@ -7,66 +7,127 @@
 	</div>
 	<div class="row">
 		<div class="col-12">
-			{% if state == 'EDIT' %}
-			<!-- For Edit Site Form -->
-			<form action="#" method="post">
-			{% else %}
-			<!-- For Add Site Form --->
-			<form action="#" method="post">
-			{% endif %}
+			<form action="{% url 'add-profile' 2 profile.id %}" method="post">
+				{% csrf_token %}
+			{% for work in profile.work %}
 				<div class="row">
-					{% csrf_token %}
 					<div class="col-md-6 mb-3">
 						<label class="form-label">Company</label>
-  						<input type="text" class="form-control" name="company" value="{{work.company}}" required>
+  						<input type="text" class="form-control" name="company-work-{{work.id}}" value="{{work.company}}" required>
 					</div>
 					<div class="col-md-6 mb-3">
 						<label class="form-label">Location</label>
-  						<input type="text" class="form-control" name="location" value="{{work.location}}" required>
+  						<input type="text" class="form-control" name="location-work-{{work.id}}" value="{{work.location}}" required>
 					</div>
 					<div class="col-md-6 mb-3">
 						<label class="form-label">Position</label>
-  						<input type="text" class="form-control" name="position" value="{{work.position}}" required>
+  						<input type="text" class="form-control" name="position-work-{{work.id}}" value="{{work.position}}" required>
 					</div>
 					<div class="col-md-6 mb-3">
 						<label class="form-label">Website</label>
-  						<input type="text" class="form-control" name="website" value="{{work.website}}">
+  						<input type="text" class="form-control" name="website-work-{{work.id}}" value="{{work.website}}">
 					</div>
 					<div class="col-md-6 mb-3">
 						<label class="form-label">Start Date</label>
-  						<input type="text" class="form-control" name="start_date" value="{{edu.start_date}}" placeholder="Formart: YYYY-MM-DD" required>
+  						<input type="text" class="form-control" name="start_date-work-{{work.id}}" value="{{work.start_date|date:"Y-m-d"}}" placeholder="Formart: YYYY-MM-DD" required>
 					</div>
 					<div class="col-md-6 mb-3">
 						<label class="form-label">End Date</label>
-  						<input type="text" class="form-control" name="end_date" value="{{edu.end_date}}" placeholder="Formart: YYYY-MM-DD" required>
+  						<input type="text" class="form-control" name="end_date-work-{{work.id}}" value="{{work.end_date|date:"Y-m-d"}}" placeholder="Formart: YYYY-MM-DD" required>
+					</div>
+					<div class="col-12">
+						<div class="row pt-4">
+							<h5>Work Highlights</h5>
+						</div>
+						{% for keyword in work.highlights %}
+						<div class="row">
+							<div class="col-md-10 mb-3">
+								<label class="form-label">Highlight</label>
+		  						<input type="text" class="form-control" name="name-work-highlight-{{work.id}}-{{keyword.id}}" value="{{keyword.name}}">
+							</div>
+							<div class="col-md-2">
+								<a class="btn btn-danger" href="javascript:void(0);">DELETE</a>
+							</div>
+						</div>
+						{% if forloop.last %}
+						<input type="hidden" name="work-highlight_form_num{{work.id}}" value="0">
+						{% endif %}
+						{% empty %}
+						<div class="row">
+							<div class="col-md-10 mb-3">
+								<label class="form-label">Highlight</label>
+		  						<input type="text" class="form-control" name="name-work-highlight-{{work.id}}_1">
+							</div>
+							<div class="col-md-2">
+								<a class="btn btn-danger" href="javascript:void(0);">DELETE</a>
+							</div>
+						</div>
+						<input type="hidden" name="work-highlight_form_num{{work.id}}" value="1">
+						{% endfor %}
+						<div class="row work-highlight-{{work.id}}"></div>
+						<div class="row">
+							<div class="col-md-2">
+								<a onclick="addWorkHighlight({{work.id}})" class="btn btn-outline-primary" href="#">Add Highlights</a>
+							</div>
+						</div>
 					</div>
 				</div>
-				<div class="row pt-4">
-					<h5>Work Highlights</h5>
+				{% if forloop.last %}
+				<div class="row form-row">
 				</div>
-				<div class="row">
-					<div class="col-md-10 mb-3">
-						<label class="form-label">Highlight</label>
-  						<input type="text" class="form-control" name="name">
+				<input type="hidden" name="form_num" value="0">
+				{% endif %}
+			{% empty %}
+			<div class="row form-row">
+				<div class="row form-item">
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Company</label>
+  						<input type="text" class="form-control" name="company-work_1" required>
 					</div>
-					<div class="col-md-2">
-						<a class="btn btn-danger" href="javascript:void(0);">DELETE</a>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Location</label>
+  						<input type="text" class="form-control" name="location-work_1" required>
 					</div>
-					<div class="col-md-2">
-						<a class="btn btn-outline-primary" href="#">Add Highlights</a>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Position</label>
+  						<input type="text" class="form-control" name="position-work_1" required>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Website</label>
+  						<input type="text" class="form-control" name="website-work_1">
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Start Date</label>
+  						<input type="text" class="form-control" name="start_date-work_1" placeholder="Formart: YYYY-MM-DD" required>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">End Date</label>
+  						<input type="text" class="form-control" name="end_date-work_1" placeholder="Formart: YYYY-MM-DD" required>
 					</div>
 				</div>
+			</div>
+			<input type="hidden" name="form_num" value="1">
+			{% endfor %}
+				
 				<div class="row">
 					<div class="col-md-10 text-center">
-						<a class="btn btn-outline-primary" href="#">Add More Work</a>
+						<a id="work-add-id" class="btn btn-outline-primary" href="#">Add More Work</a>
 					</div>
 				</div>
 				<div class="row pt-4">
 					<div class="col-12">
 						<button class="btn btn-primary">SUBMIT</button>
+						<a class="btn btn-secondary" href="{% url 'add-profile' 1 profile.id %}">Back</a>
+						<a class="btn btn-secondary" href="{% url 'add-profile' 3 profile.id %}">Skip >></a>
 					</div>
 				</div>
 			</form>
 		</div>
 	</div>
+{% endblock %}
+
+{% block js %}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- JS Page Custom -->
+    <script src="{% static 'main/profile.js' %}"></script>
 {% endblock %}

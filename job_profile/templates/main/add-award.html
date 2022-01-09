@@ -7,43 +7,73 @@
 	</div>
 	<div class="row">
 		<div class="col-12">
-			{% if state == 'EDIT' %}
-			<!-- For Edit Site Form -->
-			<form action="#" method="post">
-			{% else %}
-			<!-- For Add Site Form --->
-			<form action="#" method="post">
-			{% endif %}
+			<form action="{% url 'add-profile' 5 profile.id %}" method="post">
+				{% csrf_token %}
+				{% for award in profile.awards %}
 				<div class="row">
-					{% csrf_token %}
 					<div class="col-md-6 mb-3">
 						<label class="form-label">Title</label>
-  						<input type="text" class="form-control" name="title" value="{{award.title}}" required>
+  						<input type="text" class="form-control" name="title-award-{{award.id}}" value="{{award.title}}" required>
 					</div>
 					<div class="col-md-6 mb-3">
 						<label class="form-label">Awarder</label>
-  						<input type="text" class="form-control" name="awarder" value="{{award.awarder}}" required>
+  						<input type="text" class="form-control" name="awarder-award-{{award.id}}" value="{{award.awarder}}" required>
 					</div>
 					<div class="col-md-6 mb-3">
 						<label class="form-label">Date</label>
-  						<input type="text" class="form-control" name="date" value="{{award.date}}" placeholder="Formart: YYYY-MM-DD" required>
+  						<input type="text" class="form-control" name="date-award-{{award.id}}" value="{{award.date|date:"Y-m-d"}}" placeholder="Formart: YYYY-MM-DD" required>
 					</div>
 					<div class="col-md-6 mb-3">
 						<label class="form-label">Summary</label>
-  						<textarea class="form-control" name="summary" rows="5">{{award.summary}}</textarea>
+  						<textarea class="form-control" name="summary-award-{{award.id}}" rows="5">{{award.summary}}</textarea>
 					</div>
 				</div>
+				{% if forloop.last %}
+				<div class="row form-row"></div>
+				<input type="hidden" name="form_num" value="0">
+				{% endif %}
+				{% empty %}
+				<div class="row form-row">
+					<div class="row form-item">
+						<div class="col-md-6 mb-3">
+							<label class="form-label">Title</label>
+	  						<input type="text" class="form-control" name="title-award_1" required>
+						</div>
+						<div class="col-md-6 mb-3">
+							<label class="form-label">Awarder</label>
+	  						<input type="text" class="form-control" name="awarder-award_1" required>
+						</div>
+						<div class="col-md-6 mb-3">
+							<label class="form-label">Date</label>
+	  						<input type="text" class="form-control" name="date-award_1" placeholder="Formart: YYYY-MM-DD" required>
+						</div>
+						<div class="col-md-6 mb-3">
+							<label class="form-label">Summary</label>
+	  						<textarea class="form-control" name="summary-award_1"></textarea>
+						</div>
+					</div>
+				</div>
+				<input type="hidden" name="form_num" value="1">
+				{% endfor %}
 				<div class="row">
 					<div class="col-md-2">
-						<a class="btn btn-outline-primary" href="#">Add More</a>
+						<a id="award-add-id" class="btn btn-outline-primary" href="#">Add More</a>
 					</div>
 				</div>
 				<div class="row pt-4">
 					<div class="col-12">
 						<button class="btn btn-primary">SUBMIT</button>
+						<a class="btn btn-secondary" href="{% url 'add-profile' 4 profile.id %}">Back</a>
+						<a class="btn btn-secondary" href="{% url 'profile' profile.id %}">Skip >></a>
 					</div>
 				</div>
 			</form>
 		</div>
 	</div>
+{% endblock %}
+
+{% block js %}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- JS Page Custom -->
+    <script src="{% static 'main/profile.js' %}"></script>
 {% endblock %}

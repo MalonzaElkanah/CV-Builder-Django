@@ -5,57 +5,100 @@
 	<div class="row text-center">
 		<h3>Education Details</h3>
 	</div>
+
 	<div class="row">
 		<div class="col-12">
-			{% if state == 'EDIT' %}
-			<!-- For Edit Site Form -->
-			<form action="#" method="post">
-			{% else %}
-			<!-- For Add Site Form --->
-			<form action="#" method="post">
-			{% endif %}
+			<form action="{% url 'add-profile' 1 profile.id %}" method="post">
+				{% csrf_token %}
+			{% for edu in profile.education %}
 				<div class="row">
-					{% csrf_token %}
 					<div class="col-md-6 mb-3">
 						<label class="form-label">Institution</label>
-  						<input type="text" class="form-control" name="title" value="{{edu.institution}}" required>
+  						<input type="text" class="form-control" name="institution-edu-{{edu.id}}" value="{{edu.institution}}" required>
 					</div>
 					<div class="col-md-6 mb-3">
 						<label class="form-label">Location</label>
-  						<input type="text" class="form-control" name="location" value="{edu.location}}" required>
+  						<input type="text" class="form-control" name="location-edu-{{edu.id}}" value="{{edu.location}}" required>
 					</div>
 					<div class="col-md-6 mb-3">
 						<label class="form-label">Study Area</label>
-  						<input type="text" class="form-control" name="study_area" value="{{edu.study_area}}" placeholder="Eg. Bachelor of Science" required>
+  						<input type="text" class="form-control" name="study_area-edu-{{edu.id}}" value="{{edu.study_area}}" placeholder="Eg. Bachelor of Science" required>
 					</div>
 					<div class="col-md-6 mb-3">
 						<label class="form-label">Study Type</label>
-  						<input type="text" class="form-control" name="study_type" value="{{edu.study_type}}" placeholder="Eg. Computer Science" required>
+  						<input type="text" class="form-control" name="study_type-edu-{{edu.id}}" value="{{edu.study_type}}" placeholder="Eg. Computer Science" required>
 					</div>
 					<div class="col-md-6 mb-3">
 						<label class="form-label">Start Date</label>
-  						<input type="text" class="form-control" name="start_date" value="{{edu.start_date}}" placeholder="Formart: YYYY-MM-DD" required>
+  						<input type="text" class="form-control" name="start_date-edu-{{edu.id}}" value="{{edu.start_date|date:"Y-m-d"}}" placeholder="Formart: YYYY-MM-DD" required>
 					</div>
 					<div class="col-md-6 mb-3">
 						<label class="form-label">End Date</label>
-  						<input type="text" class="form-control" name="end_date" value="{{edu.end_date}}" placeholder="Formart: YYYY-MM-DD" required>
+  						<input type="text" class="form-control" name="end_date-edu-{{edu.id}}" value="{{edu.end_date|date:"Y-m-d"}}" placeholder="Formart: YYYY-MM-DD" required>
 					</div>
 					<div class="col-md-6 mb-3">
 						<label class="form-label">GPA</label>
-  						<input type="text" class="form-control" name="gpa" value="{{edu.gpa}}">
+  						<input type="text" class="form-control" name="gpa-edu-{{edu.id}}" value="{{edu.gpa}}">
 					</div>
 				</div>
+			{% if forloop.last %}
+			<input type="hidden" name="form_num" value="0">
+			<div class="row form-row"></div>
+			{% endif %}
+			{% empty %}
+			<div class="row form-row">
+				<div class="row form-item">
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Institution</label>
+  						<input type="text" class="form-control" name="institution-edu_1" required>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Location</label>
+  						<input type="text" class="form-control" name="location-edu_1" required>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Study Area</label>
+  						<input type="text" class="form-control" name="study_area-edu_1" placeholder="Eg. Bachelor of Science" required>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Study Type</label>
+  						<input type="text" class="form-control" name="study_type-edu_1" placeholder="Eg. Computer Science" required>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Start Date</label>
+  						<input type="text" class="form-control" name="start_date-edu_1" placeholder="Formart: YYYY-MM-DD" required>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">End Date</label>
+  						<input type="text" class="form-control" name="end_date-edu_1" placeholder="Formart: YYYY-MM-DD" required>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">GPA</label>
+  						<input type="text" class="form-control" name="gpa-edu_1">
+					</div>
+				</div>
+			</div>
+			<input type="hidden" name="form_num" value="1">
+			{% endfor %}
 				<div class="row">
 					<div class="col-md-2">
-						<a class="btn btn-outline-primary" href="#">Add More</a>
+						<a id="edu-add-id" class="btn btn-outline-primary" href="#">Add More</a>
 					</div>
 				</div>
 				<div class="row pt-4">
 					<div class="col-12">
 						<button class="btn btn-primary">SUBMIT</button>
+						<a class="btn btn-secondary" href="{% url 'edit-profile' profile.id %}">Back</a>
+						<a class="btn btn-secondary" href="{% url 'add-profile' 2 profile.id %}">Skip >></a>
 					</div>
 				</div>
 			</form>
 		</div>
 	</div>
+{% endblock %}
+
+{% block js %}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- JS Page Custom -->
+    <script src="{% static 'main/profile.js' %}"></script>
 {% endblock %}

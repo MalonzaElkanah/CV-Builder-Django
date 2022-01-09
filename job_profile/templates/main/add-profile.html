@@ -9,7 +9,7 @@
 		<div class="col-12">
 			{% if state == 'EDIT' %}
 			<!-- For Edit Site Form -->
-			<form action="#" method="post">
+			<form action="{% url 'edit-profile' profile.id %}" method="post">
 			{% else %}
 			<!-- For Add Site Form --->
 			<form action="{% url 'add-new-profile' %}" method="post">
@@ -66,8 +66,9 @@
 						<a class="btn btn-danger" href="javascript:void(0);">DELETE</a>
 					</div>
 				</div>
-				{% if forloop.first %}
+				{% if forloop.last %}
 				<input type="hidden" name="form_num" value="0">
+				<div class="row form-row"></div>
 				{% endif %}
 				{% empty %}
 				<div class="row form-row">
@@ -97,6 +98,9 @@
 				<div class="row pt-4">
 					<div class="col-12">
 						<button class="btn btn-primary">SUBMIT</button>
+						{% if state == 'EDIT' %}
+						<a class="btn btn-secondary" href="{% url 'add-profile' 1 profile.id %}">Skip >></a>
+						{% endif %}
 					</div>
 				</div>
 			</form>
@@ -105,7 +109,7 @@
 {% endblock %}
 
 {% block js %}
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- JS Page Custom -->
     <script src="{% static 'main/profile.js' %}"></script>
 {% endblock %}
