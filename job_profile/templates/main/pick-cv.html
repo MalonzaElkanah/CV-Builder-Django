@@ -1,0 +1,43 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block title %} Pick CV {% endblock %}
+{% block content %}
+	<div class="row text-center">
+		<h3>Pick CVs</h3>
+	</div>
+	<div class="row">
+		<div class="col-12">
+			<table class="table table-striped">
+				<thead>
+				    <tr>
+				      	<th scope="col">#</th>
+				      	<th scope="col">Name</th>
+				      	<th scope="col">File</th>
+				      	<th scope="col">Date Added</th>
+				      	<th scope="col" colspan="2">Action</th>
+				    </tr>
+				</thead>
+				<tbody>
+					<tr>
+				      	<td>0</td>
+				      	<td>Default CV</td>
+				      	<td><a href="#">default.html</a></td>
+				      	<td>January 10, 2022</td>
+				      	<td><a href="{% url 'cv-iframe-view' 0 profile.id %}" class="btn btn-primary">View</a></td>
+				      	<td><a href="{% url 'preview-cv' 0 profile.id %}" class="btn btn-success">Pick</a></td>
+				    </tr>
+				{% for cv in all_cv %}
+				    <tr>
+				      	<td>{{forloop.counter}}</td>
+				      	<td>{{cv.name}}</td>
+				      	<td><a href="{{cv.file.url}}">{{cv.file}}</a></td>
+				      	<td>{{cv.date_created}}</td>
+				      	<td><a href="{% url 'cv-iframe-view' cv.id profile.id %}" class="btn btn-primary">View</a></td>
+				      	<td><a href="{% url 'preview-cv' cv.id profile.id %}" class="btn btn-success">Pick</a></td>
+				    </tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+{% endblock %}

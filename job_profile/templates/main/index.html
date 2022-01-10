@@ -15,7 +15,8 @@
 				      	<th scope="col">Email</th>
 				      	<th scope="col">Phone</th>
 				      	<th scope="col">Location</th>
-				      	<th scope="col">Action</th>
+				      	<th scope="col" colspan="3">Action</th>
+
 				    </tr>
 				</thead>
 				<tbody>
@@ -28,6 +29,7 @@
 				      	<td>{{profile.location}}</td>
 				      	<td><a href="{% url 'profile' profile.id %}" class="btn btn-primary">View</a></td>
 				      	<td><a href="{% url 'edit-profile' profile.id %}" class="btn btn-secondary">Edit</a></td>
+				      	<td><a href="{% url 'pick-cv' profile.id %}" class="btn btn-success">Generate CV</a></td>
 				    </tr>
 				{% empty %}
 					<tr>
@@ -38,11 +40,11 @@
 			</table>
 		</div>
 		<div class="col-12">
-			<a href="{% url 'add-new-profile' %}" class="btn btn-primary">Add Job Site</a>
+			<a href="{% url 'add-new-profile' %}" class="btn btn-primary">Add Profile</a>
 		</div>
 	</div>
 	<div class="row text-center">
-		<h3>My CVs</h3>
+		<h3>Manage CVs</h3>
 	</div>
 	<div class="row">
 		<div class="col-12">
@@ -57,25 +59,33 @@
 				    </tr>
 				</thead>
 				<tbody>
+					<tr>
+				      	<td>0</td>
+				      	<td>Default CV</td>
+				      	<td><a href="#">default.html</a></td>
+				      	<td>January 10, 2021</td>
+				      	<td><a href="{% url 'view-cv' 0 %}" class="btn btn-primary">View</a></td>
+				      	<td></td>
+				    </tr>
 				{% for cv in all_cv %}
 				    <tr>
 				      	<td>{{forloop.counter}}</td>
 				      	<td>{{cv.name}}</td>
 				      	<td><a href="{{cv.file.url}}">{{cv.file}}</a></td>
 				      	<td>{{cv.date_created}}</td>
-				      	<td><a href="#" class="btn btn-primary">View</a></td>
-				      	<td><a href="#" class="btn btn-secondary">Edit</a></td>
+				      	<td><a href="{% url 'view-cv' cv.id %}" class="btn btn-primary">View</a></td>
+				      	<td><a href="{% url 'edit-cv' cv.id %}" class="btn btn-secondary">Edit</a></td>
 				    </tr>
 				{% empty %}
 					<tr>
-						<td colspan="6" class="text-center">No CV...<a href="#">Click Here to add.</a></td>
+						<td colspan="6" class="text-center"><a href="{% url 'add-cv' %}">Click Here to add CV/Resume template.</a></td>
 					</tr>
 				{% endfor %}
 				</tbody>
 			</table>
 		</div>
 		<div class="col-12">
-			<a href="#" class="btn btn-primary">Add CV</a>
+			<a href="{% url 'add-cv' %}" class="btn btn-primary">Add CV/Resume Template</a>
 		</div>
 	</div>
 {% endblock %}

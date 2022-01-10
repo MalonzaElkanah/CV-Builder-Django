@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import JobProfile, Education, Work, Link
+from .models import JobProfile, Education, Work, Link, CV
 
 
 class JobProfileForm(ModelForm):
@@ -26,4 +26,10 @@ class LinkForm(ModelForm):
 	class Meta:
 		model = Link
 		fields = ('job_profile', 'name', 'link')
-		
+
+
+class CVForm(ModelForm):
+	class Meta:
+		model = CV
+		fields = ('name', 'file', 'description')
+	

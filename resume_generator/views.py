@@ -1,11 +1,15 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
+from django.template import RequestContext, Template
+from django.template.loader import render_to_string, get_template
 
 # Create your views here.
 from job_profile.models import JobProfile, Link, Education, Work, CV, Award, Project, Skill
 from job_profile.models import WorkHighlight, SkillKeyword, ProjectKeyword
-from job_profile.forms import JobProfileForm, LinkForm, EducationForm, WorkForm
+from job_profile.forms import JobProfileForm, LinkForm, EducationForm, WorkForm, CVForm
 
+import datetime as dt
+import pdfkit
 
 def index(request):
 	profiles = JobProfile.objects.all()
@@ -287,5 +291,111 @@ def edit_profile(request, profile_id):
 		return redirect('add-profile', 1, profile.id)
 	else:
 		return render(request, 'main/add-profile.html', {'profile': profile, 'state': 'EDIT'})
+
+def add_cv(request):
+	if request.method == 'POST':
+		form = CVForm(request.POST, request.FILES)
+		if form.is_valid():
+			cv = form.save()
+			return redirect('view-cv', cv.id)
+		else:
+			print(form.errors)
+			return HttpResponse(form.errors)
+	else:
+		form = CVForm()
+		return render(request, 'main/add-cv.html', {'form': form})
+
+
+def edit_cv(request, cv_id):
+	cv = CV.objects.get(id=int(cv_id))
+	if request.method == 'POST':
+		form = CVForm(request.POST, request.FILES, instance=cv)
+		if form.is_valid():
+			cv = form.save()
+			return redirect('view-cv', cv.id)
+		else:
+			return HttpResponse(form.errors)
+	else:
+		form = CVForm(instance=cv)
+		return render(request, 'main/add-cv.html', {'cv': cv, 'form': form, 'state': 'EDIT'})
+
+
+def cv_view(request, cv_id):
+	profiles = JobProfile.objects.all()
+	if profiles.count() > 0:
+		profile = profiles[0]
+		today = dt.datetime.today()
+		if cv_id > 0:
+			cv = CV.objects.get(id=int(cv_id))
+			if cv.file_extension() == 'html':
+				cv_html = cv.file.read().decode()
+				context = RequestContext(request, {'today': today, 'job_profile': profile})
+				template = Template(cv_html)
+				return HttpResponse(template.render(context))
+			else:
+				pass
+		else:
+			return render(request, 'cv/default-cv.html', {'job_profile': profile, 'today': today})
+	else:
+		return HttpResponse("Create Profile First")
+
+
+def pick_cv(request, profile_id):
+	profile = JobProfile.objects.get(id=int(profile_id))
+	all_cv = CV.objects.all()
+	return render(request, 'main/pick-cv.html', {'profile': profile, 'all_cv': all_cv})
+
+
+def preview_cv(request, cv_id, profile_id):
+	profile = JobProfile.objects.get(id=int(profile_id))
+	if cv_id > 0:
+		cv = CV.objects.get(id=int(cv_id))
+		return render(request, 'main/cv-view.html', {'cv': cv, 'profile': profile})
+	else:
+		return render(request, 'main/cv-view.html', {'profile': profile, 'cv': None})
+
+
+def cv_iframe_view(request, cv_id, profile_id):
+	profile = JobProfile.objects.get(id=int(profile_id))
+	today = dt.datetime.today()
+	if cv_id > 0:
+		cv = CV.objects.get(id=int(cv_id))
+		if cv.file_extension() == 'html':
+			cv_html = cv.file.read().decode()
+			context = RequestContext(request, {'today': today, 'job_profile': profile})
+			template = Template(cv_html)
+			return HttpResponse(template.render(context))
+		else:
+			pass
+	else:
+		return render(request, 'cv/default-cv.html', {'job_profile': profile, 'today': today})
+
+
+def generate_cv_pdf(request, cv_id, profile_id):
+	profile = JobProfile.objects.get(id=int(profile_id))
+	pdf = None
+	cv_name = 'default-cv'
+	today = dt.datetime.today()
+	options = {
+		'page-size': 'Letter',
+		'encoding': "UTF-8",
+	}
+	if cv_id > 0:
+		cv = CV.objects.get(id=int(cv_id))
+		if cv.file_extension() == 'html':
+			cv_html = cv.file.read().decode()
+			context = RequestContext(request, {'today': today, 'job_profile': profile})
+			template = Template(cv_html)
+			cv_name = cv.name
+			pdf = pdfkit.from_string(template.render(context), False, options)
+
+	if pdf == None:
+		template = get_template('cv/default-cv.html')
+		html = template.render({'today': today, 'job_profile': profile})
+		pdf = pdfkit.from_string(html, False, options)
+	# buffer.seek(0)
+	response = HttpResponse(pdf, content_type='application/pdf')
+	response['Content-Disposition'] = 'attachment; filename="'+cv_name+'.pdf"'
+	return response
 
 

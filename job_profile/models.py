@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 
 import django.utils.timezone as tz
 
+import os
 
 class JobProfile(models.Model):
 	title = models.CharField('Title', max_length=150)
@@ -130,9 +131,7 @@ class Award(models.Model):
 class CV(models.Model):
 	name = models.CharField('CV Name', max_length=50)
 	file = models.FileField(upload_to='uploads/document/cv/', max_length=1000)
-	binary_data = models.TextField(null=True)
 	description = models.TextField(null=True)
-	status = models.CharField('Status', max_length=50)
 	date_created = models.DateTimeField('Date Created', auto_now_add=True)
 	# name, file, binary_data, description, status,
 

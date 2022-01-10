@@ -3,16 +3,16 @@
 {% block title %} Update CV {% endblock %}
 {% block content %}
 	<div class="row text-center">
-		<h3>CV</h3>
+		<h3>Update CV HTML Template</h3>
 	</div>
 	<div class="row">
 		<div class="col-12">
 			{% if state == 'EDIT' %}
-			<!-- For Edit Site Form -->
-			<form action="#" method="post">
+			<!-- For Edit CV Form -->
+			<form action="{% url 'edit-cv' cv.id %}" method="post" enctype="multipart/form-data">
 			{% else %}
-			<!-- For Add Site Form --->
-			<form action="#" method="post">
+			<!-- For Add CV Form --->
+			<form action="{% url 'add-cv' %}" method="post" enctype="multipart/form-data">
 			{% endif %}
 				<div class="row">
 					{% csrf_token %}
@@ -22,11 +22,19 @@
 					</div>
 					<div class="col-md-6 mb-3">
 						<label class="form-label">File</label>
-  						<input type="file" class="form-control" name="file" required>
+					{% for field in form %}
+						{% if field.name == 'file' %}
+  							{{field}}
+						{% endif %}
+					{% endfor %}
 					</div>
 					<div class="col-md-6 mb-3">
 						<label class="form-label">Description</label>
   						<textarea class="form-control" name="description" rows="5">{{cv.description}}</textarea>
+					</div>
+					<div class="col-md-6 mb-3">
+						<h6 class="pt-4">NOTE:</h6>
+						<p>The CV/Resume HTML document should use <a href="https://docs.djangoproject.com/en/3.2/ref/templates/builtins/"> Django’s built-in template tags and filters</a> to load profile data.</p>
 					</div>
 				</div>
 				
